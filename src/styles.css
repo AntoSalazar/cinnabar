@@ -1,0 +1,394 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background: transparent;
+  user-select: none;
+}
+
+/* ============================================
+   DYNAMIC ISLAND CONTAINER
+   ============================================ */
+.island {
+  background: rgba(0, 0, 0, 1);
+  border-radius: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6),
+              0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  transition: all 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.island.expanded {
+  border-radius: 20px;
+}
+
+/* ============================================
+   COMPACT VIEW
+   ============================================ */
+.compact-view {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.compact-view.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pulse-indicator {
+  width: 14px;
+  height: 14px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(0.95);
+  }
+}
+
+/* ============================================
+   MUSIC VIEW
+   ============================================ */
+.music-view {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.music-view.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.music-view.hidden {
+  display: none;
+}
+
+.music-container {
+  padding: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ============================================
+   TOP ROW: Album Art + Track Info + Visualizer
+   ============================================ */
+.top-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.album-art-container {
+  width: 50px;
+  height: 50px;
+  flex-shrink: 0;
+}
+
+.album-art {
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  object-fit: cover;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.track-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.track-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+.track-artist {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+/* Audio Visualizer */
+.visualizer {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 50px;
+  padding: 12px 0;
+}
+
+.visualizer .bar {
+  width: 3px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 2px;
+  transition: height 0.2s ease;
+}
+
+.visualizer .bar:nth-child(1) { height: 12px; animation: wave 0.8s ease-in-out infinite 0s; }
+.visualizer .bar:nth-child(2) { height: 20px; animation: wave 0.8s ease-in-out infinite 0.1s; }
+.visualizer .bar:nth-child(3) { height: 16px; animation: wave 0.8s ease-in-out infinite 0.2s; }
+.visualizer .bar:nth-child(4) { height: 22px; animation: wave 0.8s ease-in-out infinite 0.3s; }
+.visualizer .bar:nth-child(5) { height: 14px; animation: wave 0.8s ease-in-out infinite 0.4s; }
+
+@keyframes wave {
+  0%, 100% { transform: scaleY(1); opacity: 0.6; }
+  50% { transform: scaleY(1.4); opacity: 1; }
+}
+
+.music-view.paused .visualizer .bar {
+  animation: none;
+  height: 8px !important;
+  opacity: 0.3;
+}
+
+/* ============================================
+   MIDDLE ROW: Progress Bar
+   ============================================ */
+.progress-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.time-current,
+.time-remaining {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+  font-variant-numeric: tabular-nums;
+  min-width: 38px;
+  text-align: center;
+}
+
+.progress-bar-container {
+  flex: 1;
+  height: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.progress-bar-track {
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: #ffffff;
+  border-radius: 2px;
+  width: 0%;
+  transition: width 0.3s linear;
+}
+
+/* ============================================
+   BOTTOM ROW: Playback Controls
+   ============================================ */
+.controls-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.playback-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  justify-content: center;
+}
+
+.control-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+  color: #ffffff;
+}
+
+.control-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.05);
+}
+
+.control-btn:active {
+  transform: scale(0.95);
+}
+
+.control-btn svg {
+  width: 20px;
+  height: 20px;
+  color: inherit;
+}
+
+/* Large Play/Pause Button */
+.control-btn-large {
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.control-btn-large:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.control-btn-large svg {
+  width: 24px;
+  height: 24px;
+}
+
+.play-icon.hidden,
+.pause-icon.hidden {
+  display: none;
+}
+
+/* AirPlay Button */
+.airplay-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+  color: rgba(255, 255, 255, 0.7);
+  flex-shrink: 0;
+}
+
+.airplay-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.airplay-btn:active {
+  transform: scale(0.95);
+}
+
+.airplay-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ============================================
+   NOTIFICATION VIEW
+   ============================================ */
+.notification-view {
+  width: 100%;
+  height: 100%;
+  padding: 16px 20px;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.notification-view.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.notification-view.hidden {
+  display: none;
+}
+
+.notification-content {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 100%;
+}
+
+.notification-icon {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.notification-icon svg {
+  width: 24px;
+  height: 24px;
+  color: white;
+}
+
+.notification-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.notification-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.notification-body {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

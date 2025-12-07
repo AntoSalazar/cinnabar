@@ -1,0 +1,25 @@
+{
+  "name": "dynamic-island-linux",
+  "version": "1.0.0",
+  "description": "macOS-like Dynamic Island for Linux Mint Cinnamon",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev"
+  },
+  "keywords": [
+    "dynamic-island",
+    "linux",
+    "electron",
+    "spotify",
+    "notifications"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "dbus-next": "^0.10.2"
+  },
+  "devDependencies": {
+    "electron": "^39.2.6"
+  }
+}

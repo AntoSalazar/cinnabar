@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Island</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="island" class="island compact">
+    <!-- Compact State -->
+    <div id="compact-view" class="compact-view">
+      <div class="pulse-indicator"></div>
+    </div>
+
+    <!-- Expanded State - Music Player -->
+    <div id="music-view" class="music-view hidden">
+      <div class="music-container">
+        <!-- Top Row: Album Art + Track Info + Visualizer -->
+        <div class="top-row">
+          <div class="album-art-container">
+            <img id="album-art" class="album-art" src="" alt="Album Art" />
+          </div>
+
+          <div class="track-info">
+            <div class="track-title" id="track-title">Not Playing</div>
+            <div class="track-artist" id="track-artist">Unknown Artist</div>
+          </div>
+
+          <div class="visualizer">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+          </div>
+        </div>
+
+        <!-- Middle Row: Progress Bar -->
+        <div class="progress-row">
+          <span class="time-current" id="time-current">0:00</span>
+          <div class="progress-bar-container">
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill" id="progress-fill"></div>
+            </div>
+          </div>
+          <span class="time-remaining" id="time-remaining">-0:00</span>
+        </div>
+
+        <!-- Bottom Row: Playback Controls -->
+        <div class="controls-row">
+          <div class="playback-controls">
+            <button class="control-btn" id="prev-btn" aria-label="Previous">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6l-8.5 6z"/>
+              </svg>
+            </button>
+
+            <button class="control-btn control-btn-large" id="play-pause-btn" aria-label="Play/Pause">
+              <svg id="play-icon" class="play-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+              <svg id="pause-icon" class="pause-icon hidden" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+              </svg>
+            </button>
+
+            <button class="control-btn" id="next-btn" aria-label="Next">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+              </svg>
+            </button>
+          </div>
+
+          <button class="airplay-btn" id="airplay-btn" aria-label="Output">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 22h12l-6-6-6 6zM21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4v-2H3V5h18v12h-4v2h4c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Expanded State - Notification -->
+    <div id="notification-view" class="notification-view hidden">
+      <div class="notification-content">
+        <div class="notification-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+          </svg>
+        </div>
+        <div class="notification-text">
+          <div class="notification-title" id="notification-title">Notification</div>
+          <div class="notification-body" id="notification-body">You have a new notification</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
