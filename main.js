@@ -15,10 +15,10 @@ let sessionBus;
 let currentPlayer = null; // Store current player interface for controls
 
 // Dynamic Island dimensions
-const ISLAND_WIDTH = 150;
-const ISLAND_HEIGHT = 37;
+const ISLAND_WIDTH = 170;
+const ISLAND_HEIGHT = 44;
 const ISLAND_EXPANDED_WIDTH = 380;
-const ISLAND_EXPANDED_HEIGHT = 180;
+const ISLAND_EXPANDED_HEIGHT = 200;
 
 function createWindow() {
   const primaryDisplay = screen.getPrimaryDisplay();
@@ -68,12 +68,13 @@ ipcMain.on('expand-island', (event, { width, height }) => {
   const displayWidth = primaryDisplay.workAreaSize.width;
   const x = Math.floor((displayWidth - width) / 2);
 
+  // Smooth animation by setting animate flag
   mainWindow.setBounds({
     x,
     y: 10,
     width,
     height,
-  }, true);
+  }, true); // true enables animation
 });
 
 // Media control handlers

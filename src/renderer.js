@@ -6,8 +6,8 @@ const STATES = {
 };
 
 const DIMENSIONS = {
-  compact: { width: 150, height: 37 },
-  music: { width: 380, height: 180 },
+  compact: { width: 170, height: 44 },
+  music: { width: 380, height: 200 },
   notification: { width: 350, height: 80 },
 };
 
@@ -68,9 +68,11 @@ function setState(newState) {
       break;
   }
 
-  // Resize window
-  const dimensions = DIMENSIONS[newState];
-  window.electronAPI.expandIsland(dimensions.width, dimensions.height);
+  // Resize window with delay to sync with CSS animation
+  setTimeout(() => {
+    const dimensions = DIMENSIONS[newState];
+    window.electronAPI.expandIsland(dimensions.width, dimensions.height);
+  }, 50);
 }
 
 function showCompactView() {
