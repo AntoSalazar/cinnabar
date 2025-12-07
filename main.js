@@ -2,6 +2,14 @@ const { app, BrowserWindow, screen, ipcMain } = require('electron');
 const path = require('path');
 const dbus = require('dbus-next');
 
+// Utility: Format time from microseconds
+function formatTime(microseconds) {
+  const seconds = Math.floor(microseconds / 1000000);
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
 let mainWindow;
 let sessionBus;
 let currentPlayer = null; // Store current player interface for controls
@@ -198,9 +206,13 @@ async function updateMetadata(playerInterface, propsInterface) {
       return;
     }
 
-    // Get position and length for progress bar
+    // Get position and length for progress bar (convert BigInt to Number)
     const position = await propsInterface.Get('org.mpris.MediaPlayer2.Player', 'Position').catch(() => ({ value: 0 }));
     const length = getMetadataValue('mpris:length');
+
+    // Convert BigInt to Number for JSON serialization
+    const positionNum = typeof position.value === 'bigint' ? Number(position.value) : (position.value || 0);
+    const lengthNum = typeof length === 'bigint' ? Number(length) : (length || 0);
 
     const trackInfo = {
       title: title,
@@ -208,11 +220,16 @@ async function updateMetadata(playerInterface, propsInterface) {
       album: getMetadataValue('xesam:album') || '',
       artUrl: getMetadataValue('mpris:artUrl') || '',
       playing: playbackStatus.value === 'Playing',
-      position: position.value || 0, // Position in microseconds
-      length: length || 0, // Length in microseconds
+      position: positionNum, // Position in microseconds
+      length: lengthNum, // Length in microseconds
     };
 
-    console.log('📀 Track info:', JSON.stringify(trackInfo, null, 2));
+    console.log('📀 Track info:', {
+      title: trackInfo.title,
+      artist: trackInfo.artist,
+      playing: trackInfo.playing,
+      progress: `${formatTime(positionNum)} / ${formatTime(lengthNum)}`
+    });
 
     if (mainWindow) {
       mainWindow.webContents.send('music-update', trackInfo);

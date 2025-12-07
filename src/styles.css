@@ -22,15 +22,18 @@ body {
   border-radius: 24px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6),
               0 0 0 1px rgba(255, 255, 255, 0.1) inset;
-  transition: all 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+  transition: all 0.6s cubic-bezier(0.32, 0.72, 0, 1);
   position: relative;
   overflow: hidden;
   width: 100%;
   height: 100%;
+  transform-origin: center top;
 }
 
 .island.expanded {
   border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8),
+              0 0 0 1px rgba(255, 255, 255, 0.15) inset;
 }
 
 /* ============================================
@@ -43,12 +46,27 @@ body {
   align-items: center;
   justify-content: center;
   opacity: 1;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+  position: relative;
 }
 
 .compact-view.hidden {
   opacity: 0;
   pointer-events: none;
+}
+
+/* Compact Idle State */
+.compact-idle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease;
+}
+
+.compact-idle.hidden {
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
 }
 
 .pulse-indicator {
@@ -57,6 +75,7 @@ body {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 50%;
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  box-shadow: 0 0 12px rgba(102, 126, 234, 0.4);
 }
 
 @keyframes pulse {
@@ -66,8 +85,80 @@ body {
   }
   50% {
     opacity: 0.7;
-    transform: scale(0.95);
+    transform: scale(0.9);
   }
+}
+
+/* Compact Music State */
+.compact-music {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.compact-music.hidden {
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.compact-album-art {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  object-fit: cover;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Compact Equalizer */
+.compact-equalizer {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 16px;
+}
+
+.compact-equalizer .eq-bar {
+  width: 2.5px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 2px;
+  animation: equalize 0.6s ease-in-out infinite;
+}
+
+.compact-equalizer .eq-bar:nth-child(1) {
+  animation-delay: 0s;
+  height: 8px;
+}
+
+.compact-equalizer .eq-bar:nth-child(2) {
+  animation-delay: 0.15s;
+  height: 12px;
+}
+
+.compact-equalizer .eq-bar:nth-child(3) {
+  animation-delay: 0.3s;
+  height: 10px;
+}
+
+@keyframes equalize {
+  0%, 100% {
+    transform: scaleY(0.6);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scaleY(1.2);
+    opacity: 1;
+  }
+}
+
+.compact-music.paused .compact-equalizer .eq-bar {
+  animation: none;
+  height: 4px !important;
+  opacity: 0.4;
 }
 
 /* ============================================
@@ -77,8 +168,9 @@ body {
   width: 100%;
   height: 100%;
   opacity: 0;
-  transform: scale(0.95);
-  transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+  transform: scale(0.92);
+  transition: all 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+  transform-origin: center top;
 }
 
 .music-view.visible {

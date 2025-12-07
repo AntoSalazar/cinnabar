@@ -22,6 +22,10 @@ const compactView = document.getElementById('compact-view');
 const musicView = document.getElementById('music-view');
 const notificationView = document.getElementById('notification-view');
 
+const compactIdle = document.querySelector('.compact-idle');
+const compactMusic = document.querySelector('.compact-music');
+const compactAlbumArt = document.getElementById('compact-album-art');
+
 const albumArt = document.getElementById('album-art');
 const trackTitle = document.getElementById('track-title');
 const trackArtist = document.getElementById('track-artist');
@@ -73,6 +77,23 @@ function showCompactView() {
   island.classList.remove('expanded');
 
   compactView.classList.remove('hidden');
+
+  // Show music preview if we have a track, otherwise show idle
+  if (currentTrack) {
+    compactIdle.classList.add('hidden');
+    compactMusic.classList.remove('hidden');
+
+    // Update compact state based on playing status
+    if (currentTrack.playing) {
+      compactMusic.classList.remove('paused');
+    } else {
+      compactMusic.classList.add('paused');
+    }
+  } else {
+    compactIdle.classList.remove('hidden');
+    compactMusic.classList.add('hidden');
+  }
+
   musicView.classList.remove('visible');
   musicView.classList.add('hidden');
   notificationView.classList.remove('visible');
@@ -81,7 +102,7 @@ function showCompactView() {
   setTimeout(() => {
     musicView.style.display = 'none';
     notificationView.style.display = 'none';
-  }, 300);
+  }, 400);
 
   // Stop progress updates
   if (progressInterval) {
@@ -165,14 +186,28 @@ window.electronAPI.onMusicUpdate((trackInfo) => {
   console.log('🎵 RENDERER: Music update received:', trackInfo);
   currentTrack = trackInfo;
 
-  // Update UI
+  // Update expanded view UI
   trackTitle.textContent = trackInfo.title;
   trackArtist.textContent = trackInfo.artist;
 
   if (trackInfo.artUrl) {
     albumArt.src = trackInfo.artUrl;
+    compactAlbumArt.src = trackInfo.artUrl;
   } else {
     albumArt.src = '';
+    compactAlbumArt.src = '';
+  }
+
+  // Update compact view state
+  if (currentState === STATES.COMPACT) {
+    compactIdle.classList.add('hidden');
+    compactMusic.classList.remove('hidden');
+
+    if (trackInfo.playing) {
+      compactMusic.classList.remove('paused');
+    } else {
+      compactMusic.classList.add('paused');
+    }
   }
 
   // Update play/pause icon and visualizer state
