@@ -49,21 +49,23 @@ npm start
 
 ### Auto-start on Login
 
-Create a desktop entry file:
+To make Dynamic Island start automatically when you log in, see the detailed setup guide:
 
+**[📖 Auto-Start Setup Guide](AUTOSTART.md)**
+
+Quick setup:
 ```bash
-cat > ~/.config/autostart/dynamic-island.desktop <<EOF
-[Desktop Entry]
-Type=Application
-Name=Dynamic Island
-Exec=/usr/bin/node /path/to/dynamic-island-linux/main.js
-Hidden=false
-NoDisplay=false
-X-GNOME-Autostart-enabled=true
-EOF
+# Make the startup script executable
+chmod +x start.sh
+
+# It will auto-start on next login!
 ```
 
-Replace `/path/to/dynamic-island-linux/` with the actual path.
+The guide covers:
+- Basic setup for all Linux distros
+- Special setup for mounted/external disks
+- Troubleshooting common issues
+- Alternative systemd setup
 
 ## How It Works
 
