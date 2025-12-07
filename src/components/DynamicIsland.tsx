@@ -65,7 +65,7 @@ export function DynamicIsland() {
   const isExpanded = state !== IslandState.COMPACT;
 
   return (
-    <div className="w-full h-full flex items-center justify-center">
+    <div className="w-full h-full flex items-start justify-center">
       <Expandable
         isExpanded={isExpanded}
         collapsedSize={DIMENSIONS[IslandState.COMPACT]}

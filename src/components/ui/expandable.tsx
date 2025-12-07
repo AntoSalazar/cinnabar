@@ -60,7 +60,7 @@ export const Expandable = React.forwardRef<HTMLDivElement, ExpandableProps>(
       } else {
          const timer = setTimeout(() => {
           window.electronAPI?.expandIsland(collapsedSize.width, collapsedSize.height);
-        }, 150);
+        }, 650); // Wait for animation to finish completely
         return () => clearTimeout(timer);
       }
     }, [isExpanded, collapsedSize, expandedSize]);
